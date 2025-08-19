@@ -45,8 +45,7 @@ function renderTimers() {
             </div>
             <span class="countdown">${timer.display || `${timer.time}:00`}</span>
             <div class="timer-actions">
-                <button class="start" ${isRunning ? 'disabled' : ''}>${isPaused ? 'Resume' : 'Start'}</button>
-                <button class="pause" ${!isRunning ? 'disabled' : ''}>Pause</button>
+                <button class="start-pause">${isRunning ? 'Pause' : (isPaused ? 'Resume' : 'Start')}</button>
                 <button class="stop" ${state === 'stopped' ? 'disabled' : ''}>Stop</button>
             </div>
         `;
@@ -76,20 +75,16 @@ function renderTimers() {
             updateShareUrl();
         };
         
-        // Start/Resume timer
-        timerEl.querySelector('.start').onclick = function(e) {
+        // Start/Pause/Resume timer
+        timerEl.querySelector('.start-pause').onclick = function(e) {
             e.stopPropagation();
-            if (isPaused) {
+            if (isRunning) {
+                pauseTimer(i);
+            } else if (isPaused) {
                 resumeTimer(i);
             } else {
                 startTimer(i);
             }
-        };
-        
-        // Pause timer
-        timerEl.querySelector('.pause').onclick = function(e) {
-            e.stopPropagation();
-            pauseTimer(i);
         };
         
         // Stop timer
