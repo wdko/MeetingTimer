@@ -23,6 +23,7 @@ let timers = [];
 let activeTimerIndex = 0;
 let timerIntervals = {}; // Store timer intervals by index
 let timerStates = {}; // Store timer states (stopped, running, paused)
+let selectedAlarmSound = 'sine'; // Default alarm sound
 
 function renderTimers() {
     const timersDiv = document.getElementById('timers');
@@ -200,18 +201,99 @@ function stopTimer(i) {
 function playEndSound() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = ctx.createOscillator();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, ctx.currentTime);
-        oscillator.connect(ctx.destination);
-        oscillator.start();
-        setTimeout(() => {
-            oscillator.stop();
-            ctx.close();
-        }, 500);
+        
+        switch (selectedAlarmSound) {
+            case 'sine':
+                playSineWave(ctx);
+                break;
+            case 'square':
+                playSquareWave(ctx);
+                break;
+            case 'chimes':
+                playChimes(ctx);
+                break;
+            case 'triangle':
+                playTriangleWave(ctx);
+                break;
+            case 'sawtooth':
+                playSawtoothWave(ctx);
+                break;
+            default:
+                playSineWave(ctx);
+        }
     } catch (e) {
         console.log('Audio not supported');
     }
+}
+
+function playSineWave(ctx) {
+    const oscillator = ctx.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+    oscillator.connect(ctx.destination);
+    oscillator.start();
+    setTimeout(() => {
+        oscillator.stop();
+        ctx.close();
+    }, 500);
+}
+
+function playSquareWave(ctx) {
+    const oscillator = ctx.createOscillator();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+    oscillator.connect(ctx.destination);
+    oscillator.start();
+    setTimeout(() => {
+        oscillator.stop();
+        ctx.close();
+    }, 300);
+}
+
+function playChimes(ctx) {
+    const frequencies = [523, 659, 784]; // C, E, G
+    let delay = 0;
+    
+    frequencies.forEach((freq, index) => {
+        setTimeout(() => {
+            const oscillator = ctx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(freq, ctx.currentTime);
+            oscillator.connect(ctx.destination);
+            oscillator.start();
+            setTimeout(() => {
+                oscillator.stop();
+                if (index === frequencies.length - 1) {
+                    ctx.close();
+                }
+            }, 400);
+        }, delay);
+        delay += 200;
+    });
+}
+
+function playTriangleWave(ctx) {
+    const oscillator = ctx.createOscillator();
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(660, ctx.currentTime);
+    oscillator.connect(ctx.destination);
+    oscillator.start();
+    setTimeout(() => {
+        oscillator.stop();
+        ctx.close();
+    }, 600);
+}
+
+function playSawtoothWave(ctx) {
+    const oscillator = ctx.createOscillator();
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(440, ctx.currentTime);
+    oscillator.connect(ctx.destination);
+    oscillator.start();
+    setTimeout(() => {
+        oscillator.stop();
+        ctx.close();
+    }, 400);
 }
 
 // Event handlers
@@ -219,6 +301,11 @@ document.getElementById('addTimer').onclick = () => addTimer();
 
 document.getElementById('toggleTheme').onclick = () => {
     document.body.classList.toggle('dark-theme');
+};
+
+document.getElementById('alarmSoundSelect').onchange = function() {
+    selectedAlarmSound = this.value;
+    localStorage.setItem('selectedAlarmSound', selectedAlarmSound);
 };
 
 function setThemeByPreference() {
@@ -242,4 +329,11 @@ window.onload = () => {
     }
     activeTimerIndex = 0;
     renderTimers();
+    
+    // Load saved alarm sound preference
+    const savedSound = localStorage.getItem('selectedAlarmSound');
+    if (savedSound) {
+        selectedAlarmSound = savedSound;
+        document.getElementById('alarmSoundSelect').value = savedSound;
+    }
 };
