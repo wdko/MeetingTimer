@@ -1,0 +1,14 @@
+MeetingTimer is a static web application which can be used to easily start timers based on Meeting topics.
+
+- The user should be able to start a timer inside the browser
+- The User should be able to set multiple timers based on topics, and be provided a sharable url which can be used to start the same meeting timer again.
+- The application should be able to start a timer based on certain parameters in the url.
+- The application should be hosted using github pages.
+- The application should have a modern look.
+- Nice to have is a dark theme
+
+# update 1
+- make timer more prominent in the UI
+- Add buttons which allow users to easily go to the next timer or previous timer
+- Play a sound when the timer ends
+- Toggle dark theme based on system/browser preference
