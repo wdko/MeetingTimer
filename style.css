@@ -50,6 +50,27 @@ body {
     position: relative;
     transition: box-shadow 0.3s, background 0.3s;
 }
+.timer .remove-timer {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.timer .remove-timer:hover {
+    background: #c82333;
+}
 .timer-active {
     box-shadow: 0 4px 16px #d4d4d3;
     background: #d4d4d3;
@@ -116,6 +137,22 @@ button {
 button:hover {
     background: #005fa3;
 }
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+button.stop {
+    background: #dc3545;
+    color: white;
+}
+button.stop:hover {
+    background: #c82333;
+}
+button.stop:disabled {
+    background: #ccc;
+    color: #666;
+}
 .share {
     margin-top: 24px;
     display: flex;
@@ -173,4 +210,26 @@ button:hover {
 }
 .dark-theme button:hover {
     background: #222;
+}
+.dark-theme button:disabled {
+    background: #333;
+    color: #666;
+}
+.dark-theme button.stop {
+    background: #dc3545;
+    color: white;
+}
+.dark-theme button.stop:hover {
+    background: #c82333;
+}
+.dark-theme button.stop:disabled {
+    background: #333;
+    color: #666;
+}
+.dark-theme .timer .remove-timer {
+    background: #dc3545;
+    color: white;
+}
+.dark-theme .timer .remove-timer:hover {
+    background: #c82333;
 }
