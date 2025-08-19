@@ -11,6 +11,16 @@
         <div class="controls-panel">
             <h1>Meeting Topic Timer</h1>
             <button id="addTimer">Add Topic Timer</button>
+            <div class="alarm-sound-control">
+                <label for="alarmSoundSelect">Alarm Sound:</label>
+                <select id="alarmSoundSelect">
+                    <option value="sine">Classic Beep</option>
+                    <option value="square">Digital Beep</option>
+                    <option value="chimes">Chimes</option>
+                    <option value="triangle">Soft Alert</option>
+                    <option value="sawtooth">Buzzer</option>
+                </select>
+            </div>
             <div class="share">
                 <input type="text" id="shareInput" readonly />
             </div>

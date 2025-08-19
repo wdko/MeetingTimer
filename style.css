@@ -158,6 +158,22 @@ button.stop:disabled {
     display: flex;
     align-items: center;
 }
+.alarm-sound-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.alarm-sound-control label {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.alarm-sound-control select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    font-family: inherit;
+}
 #shareInput {
     flex: 1;
     margin-left: 8px;
@@ -232,4 +248,12 @@ button.stop:disabled {
 }
 .dark-theme .timer .remove-timer:hover {
     background: #c82333;
+}
+.dark-theme .alarm-sound-control select {
+    background: #444;
+    color: #f4f4f4;
+    border: 1px solid #666;
+}
+.dark-theme .alarm-sound-control label {
+    color: #f4f4f4;
 }
