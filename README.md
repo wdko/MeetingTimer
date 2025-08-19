@@ -173,6 +173,16 @@ The application saves these preferences locally:
 - Auto-advance setting
 - Theme preference (follows system preference by default)
 
+## Audio Credits
+
+Some alarm sounds in this application are provided by talented creators from [Freesound.org](https://freesound.org):
+
+- **Wakey** by [SergeQuadrado](https://freesound.org/people/SergeQuadrado/) - [Source](https://freesound.org/people/SergeQuadrado/sounds/460662/)
+- **Alarm Clock Digital** by [zanox](https://freesound.org/people/zanox/) - [Source](https://freesound.org/people/zanox/sounds/233645/)  
+- **Alarm Clock Beep** by [SpliceSound](https://freesound.org/people/SpliceSound/) - [Source](https://freesound.org/people/SpliceSound/sounds/369879/)
+
+All sounds are licensed under Creative Commons. Special thanks to the Freesound.org community for making high-quality audio resources freely available!
+
 ## License
 
 This project is open source. See the repository for license details.
