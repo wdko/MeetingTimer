@@ -30,11 +30,16 @@ body {
     flex-direction: column;
     gap: 16px;
     min-width: 320px;
+    max-height: calc(100vh - 120px);
+    overflow: hidden;
 }
 .timer-list {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
 }
 .timer {
     background: #d4d4d3;
@@ -174,6 +179,22 @@ button.stop:disabled {
     background: white;
     font-family: inherit;
 }
+.auto-advance-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.auto-advance-control label {
+    font-weight: bold;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.auto-advance-control input[type="checkbox"] {
+    margin: 0;
+}
 #shareInput {
     flex: 1;
     margin-left: 8px;
@@ -255,5 +276,8 @@ button.stop:disabled {
     border: 1px solid #666;
 }
 .dark-theme .alarm-sound-control label {
+    color: #f4f4f4;
+}
+.dark-theme .auto-advance-control label {
     color: #f4f4f4;
 }

@@ -24,6 +24,7 @@ let activeTimerIndex = 0;
 let timerIntervals = {}; // Store timer intervals by index
 let timerStates = {}; // Store timer states (stopped, running, paused)
 let selectedAlarmSound = 'sine'; // Default alarm sound
+let autoAdvanceEnabled = false; // Auto-advance feature flag
 
 function renderTimers() {
     const timersDiv = document.getElementById('timers');
@@ -126,6 +127,11 @@ function startTimer(i) {
             timers[i].display = 'Done!';
             playEndSound();
             renderTimers();
+            
+            // Auto-advance to next timer if enabled
+            if (autoAdvanceEnabled) {
+                autoAdvanceToNextTimer(i);
+            }
             return;
         }
         seconds--;
@@ -167,6 +173,11 @@ function resumeTimer(i) {
             timers[i].display = 'Done!';
             playEndSound();
             renderTimers();
+            
+            // Auto-advance to next timer if enabled
+            if (autoAdvanceEnabled) {
+                autoAdvanceToNextTimer(i);
+            }
             return;
         }
         seconds--;
@@ -296,6 +307,28 @@ function playSawtoothWave(ctx) {
     }, 400);
 }
 
+function autoAdvanceToNextTimer(currentIndex) {
+    // Find the next timer in the list that is not completed
+    for (let i = currentIndex + 1; i < timers.length; i++) {
+        const state = timerStates[i] || 'stopped';
+        if (state === 'stopped' && timers[i].display !== 'Done!') {
+            // Start the next available timer
+            setTimeout(() => {
+                startTimer(i);
+                activeTimerIndex = i;
+                // Scroll to the active timer
+                const timerEl = document.querySelectorAll('.timer')[i];
+                if (timerEl) {
+                    timerEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 1000); // Wait 1 second before starting the next timer
+            return;
+        }
+    }
+    // If no next timer found, optionally restart from the beginning
+    // For now, just do nothing when reaching the end
+}
+
 // Event handlers
 document.getElementById('addTimer').onclick = () => addTimer();
 
@@ -306,6 +339,11 @@ document.getElementById('toggleTheme').onclick = () => {
 document.getElementById('alarmSoundSelect').onchange = function() {
     selectedAlarmSound = this.value;
     localStorage.setItem('selectedAlarmSound', selectedAlarmSound);
+};
+
+document.getElementById('autoAdvanceToggle').onchange = function() {
+    autoAdvanceEnabled = this.checked;
+    localStorage.setItem('autoAdvanceEnabled', autoAdvanceEnabled);
 };
 
 function setThemeByPreference() {
@@ -335,5 +373,12 @@ window.onload = () => {
     if (savedSound) {
         selectedAlarmSound = savedSound;
         document.getElementById('alarmSoundSelect').value = savedSound;
+    }
+    
+    // Load saved auto-advance preference
+    const savedAutoAdvance = localStorage.getItem('autoAdvanceEnabled');
+    if (savedAutoAdvance === 'true') {
+        autoAdvanceEnabled = true;
+        document.getElementById('autoAdvanceToggle').checked = true;
     }
 };
