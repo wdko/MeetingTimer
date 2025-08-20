@@ -206,6 +206,13 @@ function stopTimer(i) {
 
 function playEndSound() {
     try {
+        // Check if it's a WAV file sound
+        if (['wakey', 'digital', 'distant'].includes(selectedAlarmSound)) {
+            playWavSound(selectedAlarmSound);
+            return;
+        }
+        
+        // Use Web Audio API for synthetic sounds
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         
         switch (selectedAlarmSound) {
@@ -300,6 +307,22 @@ function playSawtoothWave(ctx) {
         oscillator.stop();
         ctx.close();
     }, 400);
+}
+
+function playWavSound(soundType) {
+    const soundFiles = {
+        'wakey': 'sounds/460662__sergequadrado__wakey.wav',
+        'digital': 'sounds/233645__zanox__alarm-clock-digital.wav',
+        'distant': 'sounds/369879__splicesound__alarm-clock-beep-distant-perspective.wav'
+    };
+    
+    const audioFile = soundFiles[soundType];
+    if (audioFile) {
+        const audio = new Audio(audioFile);
+        audio.play().catch(e => {
+            console.log('Failed to play WAV sound:', e);
+        });
+    }
 }
 
 function autoAdvanceToNextTimer(currentIndex) {
