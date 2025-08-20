@@ -158,10 +158,22 @@ button.stop:disabled {
     background: #ccc;
     color: #666;
 }
-.share {
-    margin-top: 24px;
+.share-control {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+}
+.share-control label {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+#shareInput {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    font-family: inherit;
+    font-size: 0.9em;
 }
 .alarm-sound-control {
     display: flex;
@@ -194,11 +206,6 @@ button.stop:disabled {
 }
 .auto-advance-control input[type="checkbox"] {
     margin: 0;
-}
-#shareInput {
-    flex: 1;
-    margin-left: 8px;
-    padding: 6px;
 }
 .dark-theme {
     background: #222;
@@ -280,4 +287,12 @@ button.stop:disabled {
 }
 .dark-theme .auto-advance-control label {
     color: #f4f4f4;
+}
+.dark-theme .share-control label {
+    color: #f4f4f4;
+}
+.dark-theme #shareInput {
+    background: #444;
+    color: #f4f4f4;
+    border: 1px solid #666;
 }
