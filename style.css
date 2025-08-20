@@ -89,9 +89,24 @@ body {
 .timer .timer-options {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
     margin-bottom: 12px;
+}
+.timer .auto-advance-timer {
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: #555;
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+}
+.timer .auto-advance-timer input[type="checkbox"] {
+    margin: 0;
 }
 .timer .countdown {
     font-weight: bold;
@@ -191,22 +206,6 @@ button.stop:disabled {
     background: white;
     font-family: inherit;
 }
-.auto-advance-control {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.auto-advance-control label {
-    font-weight: bold;
-    font-size: 0.9em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-.auto-advance-control input[type="checkbox"] {
-    margin: 0;
-}
 .dark-theme {
     background: #222;
     color: #f4f4f4;
@@ -285,7 +284,7 @@ button.stop:disabled {
 .dark-theme .alarm-sound-control label {
     color: #f4f4f4;
 }
-.dark-theme .auto-advance-control label {
+.dark-theme .timer .auto-advance-timer {
     color: #f4f4f4;
 }
 .dark-theme .share-control label {
