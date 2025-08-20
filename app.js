@@ -6,7 +6,8 @@ function getTimersFromUrl() {
     while (params.has(`topic${i}`) && params.has(`time${i}`)) {
         timers.push({
             topic: params.get(`topic${i}`),
-            time: parseInt(params.get(`time${i}`), 10)
+            time: parseInt(params.get(`time${i}`), 10),
+            autoAdvance: params.get(`autoAdvance${i}`) === 'true'
         });
         i++;
     }
@@ -14,7 +15,9 @@ function getTimersFromUrl() {
 }
 
 function updateShareUrl() {
-    const params = timers.map((t, i) => `topic${i}=${encodeURIComponent(t.topic)}&time${i}=${t.time}`).join('&');
+    const params = timers.map((t, i) => 
+        `topic${i}=${encodeURIComponent(t.topic)}&time${i}=${t.time}&autoAdvance${i}=${t.autoAdvance || false}`
+    ).join('&');
     const url = `${window.location.origin}${window.location.pathname}?${params}`;
     document.getElementById('shareInput').value = url;
 }
@@ -24,7 +27,6 @@ let activeTimerIndex = 0;
 let timerIntervals = {}; // Store timer intervals by index
 let timerStates = {}; // Store timer states (stopped, running, paused)
 let selectedAlarmSound = 'sine'; // Default alarm sound
-let autoAdvanceEnabled = false; // Auto-advance feature flag
 
 function renderTimers() {
     const timersDiv = document.getElementById('timers');
@@ -42,6 +44,10 @@ function renderTimers() {
             <div class="timer-options">
                 <input id="topic-${i}" type="text" placeholder="Topic" value="${timer.topic}" ${isRunning ? 'disabled' : ''} />
                 <input id="time-${i}" type="number" min="1" value="${timer.time}" ${isRunning || isPaused ? 'disabled' : ''} />
+                <label class="auto-advance-timer" title="Auto-advance to next timer when this timer completes">
+                    <input type="checkbox" id="autoAdvance-${i}" ${timer.autoAdvance ? 'checked' : ''} ${isRunning || isPaused ? 'disabled' : ''} />
+                    Auto-advance
+                </label>
             </div>
             <span class="countdown">${timer.display || `${timer.time}:00`}</span>
             <div class="timer-actions">
@@ -75,6 +81,12 @@ function renderTimers() {
             updateShareUrl();
         };
         
+        // Edit auto-advance
+        timerEl.querySelector('input[type="checkbox"]').onchange = function() {
+            timers[i].autoAdvance = this.checked;
+            updateShareUrl();
+        };
+        
         // Start/Pause/Resume timer
         timerEl.querySelector('.start-pause').onclick = function(e) {
             e.stopPropagation();
@@ -104,7 +116,7 @@ function renderTimers() {
 }
 
 function addTimer(topic = '', time = 5) {
-    timers.push({ topic, time, display: `${time}:00` });
+    timers.push({ topic, time, display: `${time}:00`, autoAdvance: false });
     activeTimerIndex = timers.length - 1;
     renderTimers();
 }
@@ -123,8 +135,8 @@ function startTimer(i) {
             playEndSound();
             renderTimers();
             
-            // Auto-advance to next timer if enabled
-            if (autoAdvanceEnabled) {
+            // Auto-advance to next timer if enabled for this timer
+            if (timers[i].autoAdvance) {
                 autoAdvanceToNextTimer(i);
             }
             return;
@@ -169,8 +181,8 @@ function resumeTimer(i) {
             playEndSound();
             renderTimers();
             
-            // Auto-advance to next timer if enabled
-            if (autoAdvanceEnabled) {
+            // Auto-advance to next timer if enabled for this timer
+            if (timers[i].autoAdvance) {
                 autoAdvanceToNextTimer(i);
             }
             return;
@@ -359,11 +371,6 @@ document.getElementById('alarmSoundSelect').onchange = function() {
     localStorage.setItem('selectedAlarmSound', selectedAlarmSound);
 };
 
-document.getElementById('autoAdvanceToggle').onchange = function() {
-    autoAdvanceEnabled = this.checked;
-    localStorage.setItem('autoAdvanceEnabled', autoAdvanceEnabled);
-};
-
 function setThemeByPreference() {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.body.classList.add('dark-theme');
@@ -379,9 +386,13 @@ setThemeByPreference();
 window.onload = () => {
     const urlTimers = getTimersFromUrl();
     if (urlTimers.length) {
-        timers = urlTimers.map(t => ({ ...t, display: `${t.time}:00` }));
+        timers = urlTimers.map(t => ({ 
+            ...t, 
+            display: `${t.time}:00`,
+            autoAdvance: t.autoAdvance || false
+        }));
     } else {
-        timers = [{ topic: '', time: 5, display: '5:00' }];
+        timers = [{ topic: '', time: 5, display: '5:00', autoAdvance: false }];
     }
     activeTimerIndex = 0;
     renderTimers();
@@ -391,12 +402,5 @@ window.onload = () => {
     if (savedSound) {
         selectedAlarmSound = savedSound;
         document.getElementById('alarmSoundSelect').value = savedSound;
-    }
-    
-    // Load saved auto-advance preference
-    const savedAutoAdvance = localStorage.getItem('autoAdvanceEnabled');
-    if (savedAutoAdvance === 'true') {
-        autoAdvanceEnabled = true;
-        document.getElementById('autoAdvanceToggle').checked = true;
     }
 };
